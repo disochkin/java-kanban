@@ -1,4 +1,4 @@
-package data;
+package model;
 
 public class Task {
 
@@ -8,16 +8,19 @@ public class Task {
     private String name;
     private String description;
 
-    public Task(int id, String name, String description, Status status) {
-        this.id = id;
+    public Task(String name, String description, Status status) {
         this.name = name;
         this.description = description;
         this.status = status;
     }
 
 
-    public int getTaskId() {
+    public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -32,16 +35,14 @@ public class Task {
         return description;
     }
 
-
     @Override
     public String toString() {
-        return "Task={'id':" + "'" + getTaskId() + "'"
+        return "Task={'id':" + "'" + getId() + "'"
                 + ", 'name':" + "'" + getName() + "'"
                 + ", 'description':" + "'" + getDescription() + "'"
                 + ", 'status':" + "'" + getStatus() + "'"
                 + '}';
     }
-
 }
 
 

@@ -1,4 +1,4 @@
-package data;
+package model;
 
 import java.util.HashSet;
 
@@ -6,8 +6,8 @@ public class Epic extends Task {
 
     private HashSet<Integer> subTasksIdList;
 
-    public Epic(int id, String name, String description) {
-        super(id, name, description, Status.NEW);
+    public Epic(String name, String description) {
+        super(name, description, Status.NEW);
         subTasksIdList = new HashSet<>();
     }
 
@@ -19,13 +19,17 @@ public class Epic extends Task {
         return subTasksIdList;
     }
 
-    void setStatus(Status status) {
+    public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public void cleanSubtaskIds() {
+        subTasksIdList.clear();
     }
 
     @Override
     public String toString() {
-        return "Epic={'id':" + "'" + getTaskId() + "'"
+        return "Epic={'id':" + "'" + getId() + "'"
                 + ", 'name':" + "'" + getName() + "'"
                 + ", 'description':" + "'" + getDescription() + "'"
                 + ", 'status':" + "'" + getStatus() + "'"
