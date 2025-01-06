@@ -10,17 +10,15 @@ import java.util.HashMap;
 
 public class InMemoryTaskManager implements TaskManager {
 
+    HistoryManager historyManager;
     private int generatorId = 0;
     private HashMap<Integer, Task> tasks = new HashMap<>();
     private HashMap<Integer, SubTask> subTasks = new HashMap<>();
     private HashMap<Integer, Epic> epics = new HashMap<>();
 
-    HistoryManager historyManager;
-
     public InMemoryTaskManager(HistoryManager historyManager) {
         this.historyManager = historyManager;
     }
-
 
 
     private void addId(Task task) {

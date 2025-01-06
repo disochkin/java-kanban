@@ -5,10 +5,8 @@ import model.SubTask;
 import model.Task;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public interface TaskManager {
-    static ArrayList<Task> historyList = new ArrayList<Task>();
 
     int addTask(Task newTask);
 

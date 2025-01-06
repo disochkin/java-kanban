@@ -3,14 +3,12 @@ package controllers;
 import model.Epic;
 import model.SubTask;
 import model.Task;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
 import static model.Status.NEW;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class HistoryManagerTest {
@@ -20,6 +18,7 @@ class HistoryManagerTest {
     Task task;
     Epic epic1;
     SubTask subTask1, subTask2;
+
     @BeforeEach
     void setupClass() {
         TaskManagerTest = Managers.getDefault();
@@ -39,15 +38,15 @@ class HistoryManagerTest {
     }
 
     @Test
-    void GetHistoryTest() {
+    void getHistoryTest() {
         TaskManagerTest.getTaskById(taskId);
         requestedTask.add(task);
         assertEquals(requestedTask, TaskManagerTest.getHistory(), "История просмотра задач работает некорректно." +
-                                                                    "Задачи не добавляются.");
+                "Задачи не добавляются.");
         TaskManagerTest.getEpicById(epicId);
         requestedTask.add(epic1);
         assertEquals(requestedTask, TaskManagerTest.getHistory(), "История просмотра задач работает некорректно." +
-                                                                "Эпики не добавляются.");
+                "Эпики не добавляются.");
         TaskManagerTest.getSubTaskById(subTaskId1);
         requestedTask.add(subTask1);
 
@@ -55,11 +54,11 @@ class HistoryManagerTest {
         requestedTask.add(subTask2);
 
         assertEquals(requestedTask, TaskManagerTest.getHistory(), "История просмотра задач работает некорректно." +
-                                                                "Сабтаски не добавляются");
+                "Сабтаски не добавляются");
     }
 
     @Test
-    void HistoryCountTest() {
+    void historyCountTest() {
         for (int i = 0; i < 15; i++) {
             TaskManagerTest.getEpicById(epicId);
             requestedTask.add(epic1);
@@ -68,4 +67,12 @@ class HistoryManagerTest {
                 "Длина списка отличается.");
     }
 
+    @Test
+    void checkOnlyExistTaskCanToAppended() {
+        TaskManagerTest.getEpicById(-100);
+        TaskManagerTest.getEpicById(-100);
+        TaskManagerTest.getSubTaskById(-100);
+        assertEquals(0, TaskManagerTest.getHistory().size(), "История просмотра задач работает некорректно." +
+                "Добавлен несуществующий (null) объект");
+    }
 }
