@@ -1,3 +1,5 @@
+import controllers.InMemoryTaskManager;
+import controllers.Managers;
 import controllers.TaskManager;
 import model.Epic;
 import model.Status;
@@ -8,18 +10,23 @@ import model.Task;
 public class Main {
 
     public static void main(String[] args) {
-        TaskManager tm = new TaskManager();
+        //InMemoryTaskManager tm = new InMemoryTaskManager();
+        TaskManager tm = Managers.getDefault();
         Task task1 = new Task("задача№1", "деплой", Status.NEW);
         Task task2 = new Task("задача№2", "тест", Status.NEW);
         tm.addTask(task1);
         tm.addTask(task2);
         System.out.println("Задачи:");
         System.out.println(tm.getTasks());
+        tm.getTaskById(2);
+        tm.getTaskById(1);
+        System.out.println(tm.getHistory());
 
         Epic epic1 = new Epic("Эпик1", "Большой эпик");
         Epic epic2 = new Epic("Эпик2", "Очень большой эпик");
         tm.addEpic(epic1);
         tm.addEpic(epic2);
+
         System.out.println("Эпики:");
         System.out.println(tm.getEpics());
 
@@ -66,7 +73,5 @@ public class Main {
         tm.deleteTasks();
         tm.deleteSubtasks();
         tm.deleteEpics();
-
-
     }
 }
