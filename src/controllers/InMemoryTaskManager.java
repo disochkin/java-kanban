@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 public class InMemoryTaskManager implements TaskManager {
 
-    HistoryManager historyManager;
+    private HistoryManager historyManager;
     private int generatorId = 0;
     private HashMap<Integer, Task> tasks = new HashMap<>();
     private HashMap<Integer, SubTask> subTasks = new HashMap<>();
