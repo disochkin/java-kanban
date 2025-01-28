@@ -42,12 +42,10 @@ public class InMemoryHistoryManager implements HistoryManager {
             Node<Task> nextNode = node.next;
             previousNode.next = nextNode;
             nextNode.prev = previousNode;
-        }
-        // единственный элемент
+        } // единственный элемент
         else if (node.prev == null && node.next == null) {
             firstItem = lastItem = null;
-        }
-        // элемент в "конце" двухсвязного списка
+        } // элемент в "конце" двухсвязного списка
         else if (node.next == null) {
             Node<Task> previousNode = node.prev;
             previousNode.next = null;
