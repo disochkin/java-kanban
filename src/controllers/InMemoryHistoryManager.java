@@ -30,7 +30,6 @@ public class InMemoryHistoryManager implements HistoryManager {
     private Node<Task> lastItem;
 
 
-
     private void add(Task task) {
         int id = task.getId();
         if (taskLinkedMapIndex.containsKey(id)) {
