@@ -6,6 +6,7 @@ import model.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static model.Status.NEW;
@@ -126,6 +127,15 @@ class TaskManagerTest {
 
         assertNull(TaskManagerTest.getTaskById(taskId), "Задача не удалена.");
     }
+    @Test
+    void deleteTasksTest() {
+        Task task1 = new Task("Test addNewTask1", "Test addNewTask1 description", NEW);
+        Task task2 = new Task("Test addNewTask2", "Test2 addNewTask2 description", NEW);
+        TaskManagerTest.deleteTasks();
+
+        assertTrue(TaskManagerTest.getTasks().isEmpty(), "Задачи не удалены.");
+    }
+
 
     @Test
     void deleteEpicTest() {
@@ -138,5 +148,60 @@ class TaskManagerTest {
         assertNull(TaskManagerTest.getEpicById(epicId), "Эпик не удален.");
         assertNull(TaskManagerTest.getSubTaskById(subTaskId), "Сабтаск не удален.");
     }
+
+    @Test
+    void deleteEpicsTest() {
+        Epic epic1 = new Epic("Test addNewEpic1", "Test addNewEpic1 description");
+        final int epicId1 = TaskManagerTest.addEpic(epic1);
+        SubTask subTask1 = new SubTask("Test addNewSubTask1", "Test addNewTask1 description", NEW, epicId1);
+        final int subTaskId1 = TaskManagerTest.addSubTask(subTask1);
+
+        Epic epic2 = new Epic("Test addNewEpic2", "Test addNewEpic2 description");
+        final int epicId2 = TaskManagerTest.addEpic(epic2);
+        SubTask subTask2 = new SubTask("Test addNewSubTask", "Test addNewTask2 description", NEW, epicId2);
+        final int subTaskId2 = TaskManagerTest.addSubTask(subTask2);
+
+        TaskManagerTest.deleteEpics();
+        assertTrue(TaskManagerTest.getEpics().isEmpty(), "Эпик не удален.");
+        assertTrue(TaskManagerTest.getSubTasks().isEmpty(), "Сабтаски не удалены.");
+    }
+
+    @Test
+    void deleteSubTaskById() {
+        List<Task> requestedTask = new ArrayList<>();
+
+        Epic epic1 = new Epic("Test addNewEpic1", "Test addNewEpic1 description");
+        final int epicId1 = TaskManagerTest.addEpic(epic1);
+        SubTask subTask1 = new SubTask("Test addNewSubTask1", "Test addNewTask1 description", NEW, epicId1);
+        final int subTaskId1 = TaskManagerTest.addSubTask(subTask1);
+        SubTask subTask2 = new SubTask("Test addNewSubTask", "Test addNewTask2 description", NEW, epicId1);
+        final int subTaskId2 = TaskManagerTest.addSubTask(subTask2);
+
+        requestedTask.add(subTask1);
+        TaskManagerTest.deleteSubTaskById(subTaskId2);
+
+        assertEquals(TaskManagerTest.getSubTasksFromEpic(epicId1), requestedTask,
+                "Сабтаски из эпика не получены");
+    }
+
+    @Test
+    void getSubtasksFromEpicTest() {
+        List<Task> requestedTask = new ArrayList<>();
+
+        Epic epic1 = new Epic("Test addNewEpic1", "Test addNewEpic1 description");
+        final int epicId1 = TaskManagerTest.addEpic(epic1);
+        SubTask subTask1 = new SubTask("Test addNewSubTask1", "Test addNewTask1 description", NEW, epicId1);
+        final int subTaskId1 = TaskManagerTest.addSubTask(subTask1);
+        SubTask subTask2 = new SubTask("Test addNewSubTask", "Test addNewTask2 description", NEW, epicId1);
+        final int subTaskId2 = TaskManagerTest.addSubTask(subTask2);
+
+        requestedTask.add(subTask1);
+        requestedTask.add(subTask2);
+
+        assertEquals(TaskManagerTest.getSubTasksFromEpic(epicId1), requestedTask,
+                "Сабтаски из эпика не получены");
+    }
+
+
 
 }

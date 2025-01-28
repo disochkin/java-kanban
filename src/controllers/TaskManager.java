@@ -5,6 +5,7 @@ import model.SubTask;
 import model.Task;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface TaskManager {
 
@@ -46,5 +47,5 @@ public interface TaskManager {
 
     void updateSubTask(int id, SubTask newSubTask);
 
-    ArrayList<Task> getHistory();
+    List<String> getHistory();
 }
