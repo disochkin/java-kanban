@@ -9,26 +9,11 @@ import java.util.Map;
 
 import static java.util.Objects.isNull;
 
-class Node<T> {
-
-    public T data;
-    public Node<T> next;
-    public Node<T> prev;
-
-    public Node(Node<T> prev, T data, Node<T> next) {
-        this.data = data;
-        this.next = next;
-        this.prev = prev;
-    }
-}
-
 
 public class InMemoryHistoryManager implements HistoryManager {
-
     private final Map<Integer, Node<Task>> taskLinkedMapIndex = new HashMap<>();
     private Node<Task> firstItem;
     private Node<Task> lastItem;
-
 
     private void add(Task task) {
         int id = task.getId();
@@ -49,7 +34,6 @@ public class InMemoryHistoryManager implements HistoryManager {
             lastItem = newNode;
         }
     }
-
 
     private void removeNode(Node<Task> node) {
         // элемент в "середине" двухсвязного списка
@@ -75,7 +59,6 @@ public class InMemoryHistoryManager implements HistoryManager {
             firstItem = nextNode;
         }
     }
-
 
     @Override
     public List<String> getHistory() {
@@ -107,6 +90,19 @@ public class InMemoryHistoryManager implements HistoryManager {
     public void remove(List<Integer> listIdToRemove) {
         for (int idToRemove : listIdToRemove) {
             remove(idToRemove);
+        }
+    }
+
+    static class Node<T> {
+
+        public T data;
+        public Node<T> next;
+        public Node<T> prev;
+
+        public Node(Node<T> prev, T data, Node<T> next) {
+            this.data = data;
+            this.next = next;
+            this.prev = prev;
         }
     }
 }
