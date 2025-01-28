@@ -7,6 +7,7 @@ import model.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
 
@@ -71,6 +72,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteTasks() {
+        historyManager.remove(new ArrayList<>(tasks.keySet()));
         tasks.clear();
     }
 
@@ -78,6 +80,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteTaskById(Integer taskId) {
         if (tasks.containsKey(taskId)) {
             tasks.remove(taskId);
+            historyManager.remove(taskId);
         }
     }
 
@@ -88,6 +91,7 @@ public class InMemoryTaskManager implements TaskManager {
             epics.get(epicId).getSubTasksIdList().remove(subTaskId);
             subTasks.remove(subTaskId);
             updateEpicStatus(epicId);
+            historyManager.remove(subTaskId);
         }
     }
 
@@ -96,9 +100,11 @@ public class InMemoryTaskManager implements TaskManager {
         if (epics.containsKey(epicId)) {
             for (int subTaskId : epics.get(epicId).getSubTasksIdList()) {
                 subTasks.remove(subTaskId);
+                historyManager.remove(subTaskId);
             }
         }
         epics.remove(epicId);
+        historyManager.remove(epicId);
     }
 
     @Override
@@ -107,12 +113,15 @@ public class InMemoryTaskManager implements TaskManager {
             epic.cleanSubtaskIds();
             updateEpicStatus(epic.getId());
         }
+        historyManager.remove(new ArrayList<>(subTasks.keySet()));
         subTasks.clear();
     }
 
     @Override
     public void deleteEpics() {
+        historyManager.remove(new ArrayList<>(epics.keySet()));
         epics.clear();
+        historyManager.remove(new ArrayList<>(subTasks.keySet()));
         subTasks.clear();
     }
 
@@ -181,7 +190,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<Task> getHistory() {
+    public List<String> getHistory() {
         return historyManager.getHistory();
     }
 }
