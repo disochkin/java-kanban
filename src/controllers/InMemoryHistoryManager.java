@@ -36,21 +36,17 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     private void removeNode(Node<Task> node) {
-        // элемент в "середине" двухсвязного списка
         if (node.prev != null && node.next != null) {
             Node<Task> previousNode = node.prev;
             Node<Task> nextNode = node.next;
             previousNode.next = nextNode;
             nextNode.prev = previousNode;
-        } // единственный элемент
-        else if (node.prev == null && node.next == null) {
+        } else if (node.prev == null && node.next == null) {
             firstItem = lastItem = null;
-        } // элемент в "конце" двухсвязного списка
-        else if (node.next == null) {
+        } else if (node.next == null) {
             Node<Task> previousNode = node.prev;
             previousNode.next = null;
             lastItem = previousNode;
-            // элемент в "начале" двухсвязного списка
         } else {
             Node<Task> nextNode = node.next;
             nextNode.prev = null;
