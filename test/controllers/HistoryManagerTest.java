@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class HistoryManagerTest {
     TaskManager TaskManagerTest;
-    ArrayList<Task> requestedTask;
+    ArrayList<String> requestedTask;
     int taskId, epicId, subTaskId1, subTaskId2;
     Task task;
     Epic epic1;
@@ -40,39 +40,140 @@ class HistoryManagerTest {
     @Test
     void getHistoryTest() {
         TaskManagerTest.getTaskById(taskId);
-        requestedTask.add(task);
+        requestedTask.add(task.toString());
         assertEquals(requestedTask, TaskManagerTest.getHistory(), "История просмотра задач работает некорректно." +
                 "Задачи не добавляются.");
+
         TaskManagerTest.getEpicById(epicId);
-        requestedTask.add(epic1);
+        requestedTask.add(epic1.toString());
         assertEquals(requestedTask, TaskManagerTest.getHistory(), "История просмотра задач работает некорректно." +
                 "Эпики не добавляются.");
+
         TaskManagerTest.getSubTaskById(subTaskId1);
-        requestedTask.add(subTask1);
+        requestedTask.add(subTask1.toString());
 
         TaskManagerTest.getSubTaskById(subTaskId2);
-        requestedTask.add(subTask2);
+        requestedTask.add(subTask2.toString());
 
         assertEquals(requestedTask, TaskManagerTest.getHistory(), "История просмотра задач работает некорректно." +
                 "Сабтаски не добавляются");
     }
 
     @Test
-    void historyCountTest() {
-        for (int i = 0; i < 15; i++) {
-            TaskManagerTest.getEpicById(epicId);
-            requestedTask.add(epic1);
-        }
-        assertEquals(requestedTask.subList(0, 10).size(), TaskManagerTest.getHistory().size(), "История просмотра задач работает некорректно." +
-                "Длина списка отличается.");
+    void historyCountTestTask() {
+        TaskManagerTest.getTaskById(taskId);
+        requestedTask.add(task.toString());
+        TaskManagerTest.getTaskById(taskId);
+        assertEquals(requestedTask, TaskManagerTest.getHistory(), "История просмотра задач работает некорректно." +
+                "Дубликаты задач не удаляются");
     }
 
     @Test
-    void checkOnlyExistTaskCanToAppended() {
-        TaskManagerTest.getEpicById(-100);
-        TaskManagerTest.getEpicById(-100);
-        TaskManagerTest.getSubTaskById(-100);
-        assertEquals(0, TaskManagerTest.getHistory().size(), "История просмотра задач работает некорректно." +
-                "Добавлен несуществующий (null) объект");
+    void historyCountTestEpic() {
+        TaskManagerTest.getEpicById(epicId);
+        requestedTask.add(epic1.toString());
+        TaskManagerTest.getEpicById(epicId);
+        assertEquals(requestedTask, TaskManagerTest.getHistory(), "История просмотра задач работает некорректно." +
+                "Дубликаты эпиков не удаляются");
     }
+
+
+    @Test
+    void historyCountTestSubTask() {
+        TaskManagerTest.getSubTaskById(subTaskId1);
+        requestedTask.add(subTask1.toString());
+        TaskManagerTest.getSubTaskById(subTaskId1);
+        assertEquals(requestedTask, TaskManagerTest.getHistory(), "История просмотра задач работает некорректно." +
+                "Дубликаты подзадач не удаляются");
+    }
+
+    @Test
+    void historyManagerRemoveTaskInMiddle() {
+        TaskManagerTest.getTaskById(taskId);
+        requestedTask.add(task.toString());
+
+        TaskManagerTest.getSubTaskById(subTaskId1);
+
+        TaskManagerTest.getEpicById(epicId);
+        requestedTask.add(epic1.toString());
+
+        TaskManagerTest.getSubTaskById(subTaskId1);
+        requestedTask.add(subTask1.toString());
+
+        assertEquals(requestedTask, TaskManagerTest.getHistory(), "История просмотра задач работает некорректно." +
+                "Дубликат задач не удаляется из середины списка");
+    }
+
+    @Test
+    void historyManagerRemoveTaskFromStart() {
+        TaskManagerTest.getTaskById(taskId);
+
+        TaskManagerTest.getSubTaskById(subTaskId1);
+        requestedTask.add(subTask1.toString());
+
+        TaskManagerTest.getEpicById(epicId);
+        requestedTask.add(epic1.toString());
+
+        TaskManagerTest.getTaskById(taskId);
+        requestedTask.add(task.toString());
+
+        assertEquals(requestedTask, TaskManagerTest.getHistory(), "История просмотра задач работает некорректно." +
+                "Дубликат задач не удаляется из начала списка");
+    }
+
+    @Test
+    void historyManagerRemoveTaskFromEnd() {
+        TaskManagerTest.getTaskById(taskId);
+        requestedTask.add(task.toString());
+
+        TaskManagerTest.getSubTaskById(subTaskId1);
+        requestedTask.add(subTask1.toString());
+
+        TaskManagerTest.getEpicById(epicId);
+
+        TaskManagerTest.getEpicById(epicId);
+        requestedTask.add(epic1.toString());
+
+        assertEquals(requestedTask, TaskManagerTest.getHistory(), "История просмотра задач работает некорректно." +
+                "Дубликат задач не удаляется из конца списка");
+    }
+
+    @Test
+    void historyManagerUpdateAfterDeleteTask() {
+        TaskManagerTest.getTaskById(taskId);
+        TaskManagerTest.deleteTaskById(taskId);
+
+        assertEquals(requestedTask, TaskManagerTest.getHistory(), "История просмотра задач работает некорректно." +
+                "Задача не удаляется из истории просмотра после удаления");
+    }
+
+    @Test
+    void historyManagerUpdateAfterDeleteEpic() {
+        TaskManagerTest.getEpicById(taskId);
+        TaskManagerTest.deleteEpicById(taskId);
+
+        assertEquals(requestedTask, TaskManagerTest.getHistory(), "История просмотра задач работает некорректно." +
+                "Эпик не удаляется из истории просмотра после удаления");
+    }
+
+    @Test
+    void historyManagerUpdateAfterDeleteSubtasks() {
+        TaskManagerTest.getSubTaskById(subTaskId1);
+        requestedTask.add(subTask1.toString());
+
+        TaskManagerTest.getSubTaskById(subTaskId2);
+        requestedTask.add(subTask2.toString());
+
+        assertEquals(requestedTask, TaskManagerTest.getHistory(), "История просмотра задач работает некорректно." +
+                "Сабтаски не добавлены в историю просмотра");
+
+        TaskManagerTest.deleteSubtasks();
+        requestedTask.clear();
+
+        assertEquals(requestedTask, TaskManagerTest.getHistory(), "История просмотра задач работает некорректно." +
+                "Сабтаски не удаляется из истории просмотра после удаления");
+    }
+
 }
+
+
