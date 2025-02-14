@@ -4,6 +4,7 @@ import model.Epic;
 import model.SubTask;
 import model.Task;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import static model.Status.NEW;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@DisplayName("Добавление тасок в историю задач")
 class HistoryManagerTest {
     TaskManager TaskManagerTest;
     ArrayList<String> requestedTask;
@@ -38,6 +40,7 @@ class HistoryManagerTest {
     }
 
     @Test
+    @DisplayName("Добавить в историю")
     void getHistoryTest() {
         TaskManagerTest.getTaskById(taskId);
         requestedTask.add(task.toString());

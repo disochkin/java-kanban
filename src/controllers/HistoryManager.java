@@ -5,7 +5,7 @@ import model.Task;
 import java.util.List;
 
 public interface HistoryManager {
-    void updateHistory(Task viewedTask);
+    void add(Task viewedTask);
 
     void remove(int id);
 

@@ -4,6 +4,7 @@ import model.Epic;
 import model.SubTask;
 import model.Task;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.List;
 import static model.Status.NEW;
 import static org.junit.jupiter.api.Assertions.*;
 
+@DisplayName("Добавление тасок в TaskManager")
 class TaskManagerTest {
     private TaskManager TaskManagerTest;
 
@@ -127,6 +129,7 @@ class TaskManagerTest {
 
         assertNull(TaskManagerTest.getTaskById(taskId), "Задача не удалена.");
     }
+
     @Test
     void deleteTasksTest() {
         Task task1 = new Task("Test addNewTask1", "Test addNewTask1 description", NEW);
@@ -201,7 +204,6 @@ class TaskManagerTest {
         assertEquals(TaskManagerTest.getSubTasksFromEpic(epicId1), requestedTask,
                 "Сабтаски из эпика не получены");
     }
-
 
 
 }
