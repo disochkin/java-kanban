@@ -1,5 +1,7 @@
 package model;
 
+import static model.typeTask.SUBTASK;
+
 public class SubTask extends Task {
 
     private int epicId;
@@ -7,7 +9,15 @@ public class SubTask extends Task {
     public SubTask(String name, String description, Status status, int epicId) {
         super(name, description, status);
         this.epicId = epicId;
+        this.type = SUBTASK;
     }
+
+    public SubTask(int id, String name, String description, Status status, int epicId) {
+        super(id, name, description, status);
+        this.epicId = epicId;
+        this.type = SUBTASK;
+    }
+
 
     public int getEpicId() {
         return epicId;
@@ -19,11 +29,10 @@ public class SubTask extends Task {
 
     @Override
     public String toString() {
-        return "SubTask={'id':" + "'" + getId() + "'"
-                + ", 'name':" + "'" + getName() + "'"
-                + ", 'description':" + "'" + getDescription() + "'"
-                + ", 'status':" + "'" + getStatus() + "'"
-                + ", 'epicID':" + "'" + getEpicId() + "'"
-                + '}';
+        return super.toString() + getEpicId();
     }
-}
+
+    @Override
+    public String getCsvRow(char delimiter) {
+        return super.getCsvRow(delimiter) + getEpicId();
+    }}

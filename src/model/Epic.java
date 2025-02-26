@@ -1,6 +1,7 @@
 package model;
 
 import java.util.HashSet;
+import static model.typeTask.EPIC;
 
 public class Epic extends Task {
 
@@ -8,6 +9,13 @@ public class Epic extends Task {
 
     public Epic(String name, String description) {
         super(name, description, Status.NEW);
+        this.type = EPIC;
+        subTasksIdList = new HashSet<>();
+    }
+
+    public Epic(Integer id, String name, String description, Status epicStatus) {
+        super(id, name, description, epicStatus);
+        this.type = EPIC;
         subTasksIdList = new HashSet<>();
     }
 
@@ -19,6 +27,7 @@ public class Epic extends Task {
         return subTasksIdList;
     }
 
+
     public void setStatus(Status status) {
         this.status = status;
     }
@@ -29,11 +38,10 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return "Epic={'id':" + "'" + getId() + "'"
-                + ", 'name':" + "'" + getName() + "'"
-                + ", 'description':" + "'" + getDescription() + "'"
-                + ", 'status':" + "'" + getStatus() + "'"
-                + '}';
+        return super.toString();
     }
-
+    @Override
+    public String getCsvRow(char delimiter) {
+        return super.getCsvRow(delimiter);
+    }
 }
