@@ -6,11 +6,10 @@ public class Task {
 
 
     protected Status status;
+    protected TypeTask type;
     private int id;
     private String name;
     private String description;
-
-    protected TypeTask type;
 
     public Task(String name, String description, Status status) {
         this.name = name;
@@ -50,11 +49,11 @@ public class Task {
 
     @Override
     public String toString() {
-        return String.valueOf(getId())+","+ type + ","+ getName() +","+ getStatus() + ","+getDescription() + ",";
+        return String.valueOf(getId()) + "," + type + "," + getName() + "," + getStatus() + "," + getDescription() + ",";
     }
 
     public String getCsvRow(char delimiter) {
-        return String.valueOf(getId())+delimiter+ type + delimiter + getName() + delimiter + getStatus() + delimiter +getDescription() + delimiter;
+        return String.valueOf(getId()) + delimiter + type + delimiter + getName() + delimiter + getStatus() + delimiter + getDescription() + delimiter;
     }
 }
 

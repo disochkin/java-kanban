@@ -35,4 +35,5 @@ public class SubTask extends Task {
     @Override
     public String getCsvRow(char delimiter) {
         return super.getCsvRow(delimiter) + getEpicId();
-    }}
+    }
+}

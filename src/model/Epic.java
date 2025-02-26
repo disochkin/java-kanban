@@ -1,6 +1,7 @@
 package model;
 
 import java.util.HashSet;
+
 import static model.TypeTask.EPIC;
 
 public class Epic extends Task {
@@ -40,6 +41,7 @@ public class Epic extends Task {
     public String toString() {
         return super.toString();
     }
+
     @Override
     public String getCsvRow(char delimiter) {
         return super.getCsvRow(delimiter);
