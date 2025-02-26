@@ -1,7 +1,7 @@
 package model;
 
 import java.util.HashSet;
-import static model.typeTask.EPIC;
+import static model.TypeTask.EPIC;
 
 public class Epic extends Task {
 

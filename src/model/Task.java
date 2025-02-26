@@ -1,6 +1,6 @@
 package model;
 
-import static model.typeTask.TASK;
+import static model.TypeTask.TASK;
 
 public class Task {
 
@@ -10,7 +10,7 @@ public class Task {
     private String name;
     private String description;
 
-    protected typeTask type;
+    protected TypeTask type;
 
     public Task(String name, String description, Status status) {
         this.name = name;

@@ -1,6 +1,6 @@
 package model;
 
-import static model.typeTask.SUBTASK;
+import static model.TypeTask.SUBTASK;
 
 public class SubTask extends Task {
 

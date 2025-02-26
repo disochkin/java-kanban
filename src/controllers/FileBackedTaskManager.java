@@ -78,7 +78,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             }
             for (int i = 1; i < fileRows.size(); i++) {
                 HashMap<String, String> properties = mapCsvRowToProperties(fileRows.get(i));
-                switch (typeTask.valueOf(properties.get("type"))) {
+                switch (TypeTask.valueOf(properties.get("type"))) {
                     case EPIC: {
                         lastId = restoreEpic(properties);
                         break;
