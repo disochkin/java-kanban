@@ -14,17 +14,48 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     final String rowDelimiter = System.lineSeparator();
     final char columnDelimiter = ',';
     final File file;
-    String[] csvFileHeader = {"id", "type", "name", "status", "description", "epic"};
+    private final String[] csvFileHeader = {"id", "type", "name", "status", "description", "epic"};
     ManagerSaveException e;
     private BufferedWriter writer;
 
 
-    public FileBackedTaskManager(HistoryManager historyManager, File file) {
-        super(historyManager);
+    public FileBackedTaskManager(File file) {
         this.file = file;
-        if (file.exists() && !file.isDirectory()) {
-            loadFromFile();
+    }
+
+    static FileBackedTaskManager loadFromFile(File file) {
+        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file);
+
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            int lastId = 0;
+            List<String> fileRows = new ArrayList<>();
+            while (br.ready()) {
+                fileRows.add(br.readLine());
+            }
+            for (int i = 1; i < fileRows.size(); i++) {
+                HashMap<String, String> properties = fileBackedTaskManager.mapCsvRowToProperties(fileRows.get(i));
+                switch (TypeTask.valueOf(properties.get("type"))) {
+                    case EPIC: {
+                        lastId = fileBackedTaskManager.restoreEpic(properties);
+                        break;
+                    }
+                    case TASK: {
+                        lastId = fileBackedTaskManager.restoreTask(properties);
+                        break;
+                    }
+                    case SUBTASK: {
+                        lastId = fileBackedTaskManager.restoreSubTask(properties);
+                        break;
+                    }
+                }
+                if (lastId > fileBackedTaskManager.generatorId) {
+                    fileBackedTaskManager.generatorId = lastId;
+                }
+            }
+        } catch (IOException e) {
+            throw new ManagerSaveException("Ошибка при записи в  файл: " + e.getMessage());
         }
+        return fileBackedTaskManager;
     }
 
     private HashMap<String, String> mapCsvRowToProperties(String row) {
@@ -42,67 +73,25 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public void save() {
         try {
-            try {
-                writer = new BufferedWriter(new FileWriter(file, false));
-                storeToFile(String.join(Character.toString(columnDelimiter), csvFileHeader));
-                for (Task task : getTasks()) {
-                    storeToFile(task.getCsvRow(columnDelimiter));
-                }
-                for (Task epic : getEpics()) {
-                    storeToFile(epic.getCsvRow(columnDelimiter));
-                    for (Task subTask : getSubTasksFromEpic(epic.getId())) {
-                        storeToFile(subTask.getCsvRow(columnDelimiter));
-                    }
-                }
-                writer.close();
-            } catch (IOException e) {
-                System.out.println("Произошла ошибка записи в файл.");
+            writer = new BufferedWriter(new FileWriter(file, false));
+            storeToFile(String.join(Character.toString(columnDelimiter), csvFileHeader));
+            for (Task task : getTasks()) {
+                storeToFile(task.getCsvRow(columnDelimiter));
             }
-        } catch (ManagerSaveException e) {
-            System.out.println("Произошла ошибка записи в файл. Ошибка: " + e.getMessages());
+            for (Task epic : getEpics()) {
+                storeToFile(epic.getCsvRow(columnDelimiter));
+                for (Task subTask : getSubTasksFromEpic(epic.getId())) {
+                    storeToFile(subTask.getCsvRow(columnDelimiter));
+                }
+            }
+            writer.close();
+        } catch (IOException e) {
+            throw new ManagerSaveException("Ошибка при записи в  файл: " + e.getMessage());
         }
-
     }
 
     private void addId(Task task, Integer id) {
         task.setId(id);
-    }
-
-
-    private void loadFromFile() {
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            int lastId = 0;
-            List<String> fileRows = new ArrayList<>();
-            while (br.ready()) {
-                fileRows.add(br.readLine());
-            }
-            for (int i = 1; i < fileRows.size(); i++) {
-                HashMap<String, String> properties = mapCsvRowToProperties(fileRows.get(i));
-                switch (TypeTask.valueOf(properties.get("type"))) {
-                    case EPIC: {
-                        lastId = restoreEpic(properties);
-                        break;
-                    }
-                    case TASK: {
-                        lastId = restoreTask(properties);
-                        break;
-                    }
-                    case SUBTASK: {
-                        lastId = restoreSubTask(properties);
-                        break;
-                    }
-                }
-                if (lastId > generatorId) {
-                    generatorId = lastId;
-                }
-            }
-        } catch (FileNotFoundException ex) {
-            throw new RuntimeException(ex);
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        } catch (NumberFormatException ex) {
-            System.out.println(ex);
-        }
     }
 
     public int restoreTask(HashMap<String, String> properties) {

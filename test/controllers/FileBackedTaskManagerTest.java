@@ -83,7 +83,7 @@ class FileBackedTaskManagerTest {
             writer.write(row + System.lineSeparator());
         }
         writer.flush();
-        TaskManagerTest = Managers.getFileBackedFM(database_file);
+        TaskManagerTest = FileBackedTaskManager.loadFromFile(database_file);
         assertEquals("1,TASK,Test addNewTask,NEW,Test addNewTask description,", TaskManagerTest.getTasks().get(0).toString(),
                 "Ошибка восстановления Задач из файла (TASK)");
         assertEquals("2,EPIC,Test addNewEpic1,NEW,Test addNewEpic1 description,", TaskManagerTest.getEpics().get(0).toString(),
