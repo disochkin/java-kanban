@@ -4,11 +4,13 @@ import model.Epic;
 import model.Status;
 import model.SubTask;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static model.Status.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@DisplayName("Обновление статуса эпика")
 public class TaskUpdateStatusTest {
     Epic epic1;
     int epicId;
