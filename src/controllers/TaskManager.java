@@ -4,14 +4,15 @@ import model.Epic;
 import model.SubTask;
 import model.Task;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public interface TaskManager {
 
-    int addTask(Task newTask);
+    int addTask(Task newTask) throws IOException;
 
-    int addSubTask(SubTask newSubTask);
+    int addSubTask(SubTask newSubTask) throws IOException;
 
     int addEpic(Epic newEpic);
 
@@ -41,11 +42,14 @@ public interface TaskManager {
 
     ArrayList<Task> getSubTasks();
 
-    void updateTask(int id, Task newTask);
+    void updateTask(int id, Task newTask) throws IOException;
 
-    void updateEpic(int id, Epic newEpic);
+    void updateEpic(int id, Epic newEpic) throws IOException;
 
-    void updateSubTask(int id, SubTask newSubTask);
+    void updateSubTask(int id, SubTask newSubTask) throws IOException;
 
     List<String> getHistory();
+
+    List<Task> getPrioritizedTasks();
+
 }
