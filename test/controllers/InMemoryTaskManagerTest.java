@@ -67,7 +67,13 @@ public class InMemoryTaskManagerTest extends TaskManagerTest{
     @Test
     @Override
     void deleteEpicTest()throws IOException {
-        super.deleteTaskTest();
+        super.deleteEpicTest();
+    }
+
+    @Test
+    @Override
+    void deleteEpicsTest()throws IOException {
+        super.deleteEpicsTest();
     }
 
 
