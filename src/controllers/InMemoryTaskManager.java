@@ -274,8 +274,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public List<Task> getPrioritizedTasks() {
-        {
-            return new LinkedList<>(sortTaskTime.values());
-        }
+        return new LinkedList<>(sortTaskTime.values());
     }
 }
