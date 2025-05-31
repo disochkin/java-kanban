@@ -7,8 +7,7 @@ import static model.TypeTask.EPIC;
 
 public class Epic extends Task {
 
-    private ArrayList<Integer> subTasksIdList;
-    private LocalDateTime startTime;
+    private final ArrayList<Integer> subTasksIdList;
     private LocalDateTime endTime;
 
     public Epic(String name, String description) {
@@ -35,6 +34,10 @@ public class Epic extends Task {
         this.endTime = endTime;
     }
 
+    public LocalDateTime getEndTime(LocalDateTime endTime) {
+        return endTime;
+    }
+
     public void setStatus(Status status) {
         this.status = status;
     }
@@ -53,4 +56,8 @@ public class Epic extends Task {
         return super.getCsvRow(delimiter);
     }
 
+    @Override
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
 }

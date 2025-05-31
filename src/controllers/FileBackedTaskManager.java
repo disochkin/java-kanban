@@ -1,13 +1,10 @@
 package controllers;
-
 import model.*;
-
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import static java.lang.Integer.parseInt;
 
 
@@ -17,7 +14,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     final char columnDelimiter = ',';
     final File file;
     private final String[] csvFileHeader = {"id", "type", "name", "status", "description", "duration", "startTime", "epic"};
-    ManagerSaveException e;
+    private ManagerSaveException e;
     private BufferedWriter writer;
 
     public FileBackedTaskManager(File file) {

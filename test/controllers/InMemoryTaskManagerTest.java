@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-public class InMemoryTaskManagerTest extends TaskManagerTest{
+public class InMemoryTaskManagerTest extends TaskManagerTest {
     @BeforeEach
     public void setUp() throws IOException {
         taskManagerTest = new InMemoryTaskManager();
@@ -54,38 +54,39 @@ public class InMemoryTaskManagerTest extends TaskManagerTest{
 
     @Test
     @Override
-    void deleteTaskTest()throws IOException {
+    void deleteTaskTest() throws IOException {
         super.deleteTaskTest();
     }
+
     @Test
     @Override
-    void deleteTasksTest()throws IOException {
+    void deleteTasksTest() throws IOException {
         super.deleteTaskTest();
     }
 
 
     @Test
     @Override
-    void deleteEpicTest()throws IOException {
+    void deleteEpicTest() throws IOException {
         super.deleteEpicTest();
     }
 
     @Test
     @Override
-    void deleteEpicsTest()throws IOException {
+    void deleteEpicsTest() throws IOException {
         super.deleteEpicsTest();
     }
 
 
     @Test
     @Override
-    void deleteSubTaskById()throws IOException {
-        super.deleteSubTaskById();
+    void deleteSubTaskByIdTest() throws IOException {
+        super.deleteSubTaskByIdTest();
     }
 
     @Test
     @Override
-    void getSubtasksFromEpicTest()throws IOException {
+    void getSubtasksFromEpicTest() throws IOException {
         super.getSubtasksFromEpicTest();
     }
 

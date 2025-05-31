@@ -2,7 +2,6 @@ package model;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import static model.TypeTask.TASK;
 
@@ -11,14 +10,11 @@ public class Task {
 
     protected Status status;
     protected TypeTask type;
+    protected LocalDateTime startTime;
     private int id;
-    private String name;
-    private String description;
-
-    private Duration duration;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    private final String name;
+    private final String description;
+    protected Duration duration;
 
     public Task(String name, String description, Status status, long duration) {
         this.name = name;
@@ -48,7 +44,6 @@ public class Task {
     }
 
 
-
     public int getId() {
         return id;
     }
@@ -71,7 +66,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return String.valueOf(getId()) + "," + type + "," + getName() + "," + getStatus() + "," + getDescription() + ","
+        return getId() + "," + type + "," + getName() + "," + getStatus() + "," + getDescription() + ","
                 + getDuration() + "," + startTime;
     }
 
@@ -84,21 +79,22 @@ public class Task {
         return startTime.plus(duration);
     }
 
+    public Long getDuration() {
+        return duration.toMinutes();
+    }
+
     public void setDuration(long duration) {
         this.duration = Duration.ofMinutes(duration);
     }
 
-    public Long getDuration() {
-        return duration.toMinutes();
+    public LocalDateTime getStartTime() {
+        return startTime;
     }
 
     public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
 }
 
 

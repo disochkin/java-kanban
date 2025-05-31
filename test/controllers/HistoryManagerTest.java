@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import javax.imageio.IIOException;
 import java.io.IOException;
 import java.util.ArrayList;
 
