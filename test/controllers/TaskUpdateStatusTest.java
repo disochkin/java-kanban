@@ -7,6 +7,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 import static model.Status.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -23,28 +25,35 @@ public class TaskUpdateStatusTest {
         epicId = TaskManagerTest.addEpic(epic1);
     }
 
-    void generateSubtask(Status[] statuses) {
+    void generateSubtask(Status[] statuses) throws IOException {
         for (Status status : statuses) {
-            TaskManagerTest.addSubTask(new SubTask("Test addNewSubTask", "Test addNewTask description", status, epicId));
+            TaskManagerTest.addSubTask(new SubTask("Test addNewSubTask", "Test addNewTask description", status, epicId, 5));
         }
     }
 
     @Test
-    void epicUpdateStatusTestOnlyNew() {
+    void epicUpdateStatusTestOnlyNew() throws IOException {
         generateSubtask(new Status[]{NEW, NEW, NEW, NEW});
-        assertEquals(epic1.getStatus(), NEW, "Статус эпика вычисляется некорректно");
+        assertEquals(NEW, epic1.getStatus(), "Статус эпика вычисляется некорректно");
     }
 
     @Test
-    void epicUpdateStatusOnlyDone() {
+    void epicUpdateStatusOnlyDone() throws IOException {
         generateSubtask(new Status[]{DONE, DONE, DONE, DONE});
-        assertEquals(epic1.getStatus(), DONE, "Статус эпика вычисляется некорректно");
+        assertEquals(DONE, epic1.getStatus(), "Статус эпика вычисляется некорректно");
     }
 
     @Test
-    void epicUpdateStatusWithINPROGRESS() {
+    void epicUpdateStatusWithINPROGRESSNEWDONE() throws IOException {
+        generateSubtask(new Status[]{IN_PROGRESS, NEW, DONE, DONE});
+        assertEquals(IN_PROGRESS, epic1.getStatus(), "Статус эпика вычисляется некорректно");
+    }
+
+
+    @Test
+    void epicUpdateStatusWithINPROGRESS() throws IOException {
         generateSubtask(new Status[]{IN_PROGRESS, DONE, DONE, DONE});
-        assertEquals(epic1.getStatus(), IN_PROGRESS, "Статус эпика вычисляется некорректно");
+        assertEquals(IN_PROGRESS, epic1.getStatus(), "Статус эпика вычисляется некорректно");
     }
 
 
