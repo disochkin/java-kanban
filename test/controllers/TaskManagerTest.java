@@ -137,7 +137,12 @@ abstract class TaskManagerTest<T extends TaskManager> {
         int initialPrioritizedTasks = taskManagerTest.getPrioritizedTasks().size();
         taskManagerTest.deleteTaskById(taskId);
         int finalPrioritizedTasks = taskManagerTest.getPrioritizedTasks().size();
-        assertNull(taskManagerTest.getTaskById(taskId), "Задача не удалена.");
+        Exception exception = assertThrows(java.io.IOException.class, () -> {
+            taskManagerTest.getTaskById(taskId);
+        });
+        String expectedMessage = String.format("Задача с id=%s не найдена", taskId);
+        String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
         assertEquals(initialPrioritizedTasks, finalPrioritizedTasks + 1, "Задача не удалена из приоритетного списка.");
     }
 
@@ -157,8 +162,15 @@ abstract class TaskManagerTest<T extends TaskManager> {
         subTask.setStartTime(LocalDateTime.now().plusMinutes(30));
         final int subTaskId = taskManagerTest.addSubTask(subTask);
         int initialPrioritizedTasks = taskManagerTest.getPrioritizedTasks().size();
+
         taskManagerTest.deleteEpicById(epicId);
-        assertNull(taskManagerTest.getEpicById(epicId), "Эпик не удален.");
+        Exception exception = assertThrows(java.io.IOException.class, () -> {
+            taskManagerTest.getEpicById(epicId);
+        });
+        String expectedMessage = String.format("Эпик с id=%s не найден", epicId);
+        String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
+
         assertNull(taskManagerTest.getSubTaskById(subTaskId), "Сабтаск не удален.");
         int finalPrioritizedTasks = taskManagerTest.getPrioritizedTasks().size();
         assertEquals(initialPrioritizedTasks, finalPrioritizedTasks + 1, "Задачи не удалены из приоритетного списка.");

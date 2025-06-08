@@ -6,15 +6,13 @@ import java.time.LocalDateTime;
 import static model.TypeTask.TASK;
 
 public class Task {
-
-
-    protected Status status;
-    protected TypeTask type;
-    protected LocalDateTime startTime;
-    private int id;
     private final String name;
     private final String description;
+    protected Status status;
+    protected TypeTask type;
     protected Duration duration;
+    private LocalDateTime startTime;
+    private int id;
 
     public Task(String name, String description, Status status, long duration) {
         this.name = name;
@@ -22,6 +20,7 @@ public class Task {
         this.description = description;
         this.status = status;
         this.duration = Duration.ofMinutes(duration);
+        this.startTime = null;
     }
 
     public Task(Integer id, String name, String description, Status status, long duration) {
