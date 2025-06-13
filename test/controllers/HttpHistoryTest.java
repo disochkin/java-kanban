@@ -1,9 +1,9 @@
 package controllers;
 
-import Adapters.DurationDeserializer;
-import Adapters.DurationSerializer;
-import Adapters.LocalDateTimeDeserializer;
-import Adapters.LocalDateTimeSerializer;
+import adapters.DurationDeserializer;
+import adapters.DurationSerializer;
+import adapters.LocalDateTimeDeserializer;
+import adapters.LocalDateTimeSerializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import model.Status;

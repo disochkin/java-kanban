@@ -1,4 +1,4 @@
-package Adapters;
+package adapters;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
