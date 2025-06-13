@@ -10,6 +10,13 @@ public class Epic extends Task {
     private final ArrayList<Integer> subTasksIdList;
     private LocalDateTime endTime;
 
+    // конструктор для десериализатора
+    public Epic() {
+        super("", "", Status.NEW, 0);
+        this.type = EPIC;
+        subTasksIdList = new ArrayList<>();
+    }
+
     public Epic(String name, String description) {
         super(name, description, Status.NEW, 0);
         this.type = EPIC;

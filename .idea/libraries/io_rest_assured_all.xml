@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="io.rest.assured.all" type="repository">
+    <properties maven-id="io.rest-assured:rest-assured-all:5.5.5" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/io/rest-assured/rest-assured-all/5.5.5/rest-assured-all-5.5.5.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/apache/groovy/groovy/4.0.22/groovy-4.0.22.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/apache/commons/commons-lang3/3.16.0/commons-lang3-3.16.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/apache/groovy/groovy-xml/4.0.22/groovy-xml-4.0.22.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/ccil/cowan/tagsoup/tagsoup/1.2.1/tagsoup-1.2.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/apache/groovy/groovy-json/4.0.22/groovy-json-4.0.22.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

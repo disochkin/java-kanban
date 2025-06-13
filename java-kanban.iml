@@ -41,5 +41,6 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="gson-2.13.1" level="project" />
+    <orderEntry type="library" name="io.rest.assured.all" level="project" />
   </component>
 </module>

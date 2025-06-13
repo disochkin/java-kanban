@@ -1,20 +1,15 @@
 package HttpTaskHandlers;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import model.Endpoint;
 import com.sun.net.httpserver.HttpExchange;
 import controllers.TaskManager;
 import model.Epic;
 
 import java.io.IOException;
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 public class HttpEpicHandler extends BaseHttpHandler {
     public HttpEpicHandler(TaskManager tm) {
         super(tm);
-
     }
 
     @Override
@@ -41,14 +36,39 @@ public class HttpEpicHandler extends BaseHttpHandler {
                 handleDeleteEpic(httpExchange);
                 break;
             }
+            case GET_ALL_SUBENTITIES: {
+                handleGetSubTaskFromEpic(httpExchange);
+                break;
+            }
             default:
-                sendText(httpExchange, "Такого эндпоинта не существует", 404);
+                sendText(httpExchange, "Такого эндпоинта не существует", 405);
         }
     }
 
+    protected Endpoint getEndpoint(String requestPath, String requestMethod) {
+        String[] pathParts = requestPath.split("/");
+        if (pathParts.length == 2 && requestMethod.equals("GET")) {
+            return Endpoint.GET_ALL_ENTITY;
+        }
+        if (pathParts.length == 3 && requestMethod.equals("GET")) {
+            return Endpoint.GET_ENTITY_BY_ID;
+        }
+        if (pathParts.length == 2 && requestMethod.equals("POST")) {
+            return Endpoint.CREATE_ENTITY;
+        }
+        if (pathParts.length == 3 && requestMethod.equals("POST")) {
+            return Endpoint.UPDATE_ENTITY;
+        }
+        if (pathParts.length == 3 && requestMethod.equals("DELETE")) {
+            return Endpoint.DELETE_ENTITY;
+        }
+        if (pathParts.length == 4 && requestMethod.equals("GET")) {
+            return Endpoint.GET_ALL_SUBENTITIES;}
+        return Endpoint.UNKNOWN;
+    }
+
     private void handleGetAllEpics(HttpExchange httpExchange) throws IOException {
-        String text = tm.getEpics().toString();
-        sendText(httpExchange, text, 200);
+        sendText(httpExchange,  taskSerializer.toJson(tm.getEpics()), 200);
     }
 
     private void handleGetEpicById(HttpExchange httpExchange) throws IOException {
@@ -59,8 +79,7 @@ public class HttpEpicHandler extends BaseHttpHandler {
         }
         try {
             int epicId = epicIdOpt.get();
-            String text = tm.getEpicById(epicId).toString();
-            sendText(httpExchange, text, 200);
+            sendText(httpExchange,  taskSerializer.toJson(tm.getEpicById(epicId)), 200);
         } catch (IOException e) {
             sendText(httpExchange, e.toString(), 404);
         }
@@ -73,24 +92,16 @@ public class HttpEpicHandler extends BaseHttpHandler {
             return;
         }
         int epicId = epicIdOpt.get();
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer())
-                .registerTypeAdapter(Duration.class, new DurationAdapter())
-                .create();
-        Epic epicDTO = gson.fromJson(getJsonBody(httpExchange), Epic.class);
-        tm.updateTask(epicId, epicDTO);
+        Epic epicDTO = taskDeserializer.fromJson(getJsonBody(httpExchange), Epic.class);
+        tm.updateEpic(epicId, epicDTO);
         sendText(httpExchange, "Эпик обновлен", 200);
     }
 
     private void handleCreateEpic(HttpExchange httpExchange) throws IOException {
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer())
-                .registerTypeAdapter(Duration.class, new DurationAdapter())
-                .create();
         try {
-            Epic epicDTO = gson.fromJson(getJsonBody(httpExchange), Epic.class);
-            int taskId = tm.addTask(epicDTO);
-            sendText(httpExchange, String.format("Эпик создан. id=%s", taskId), 200);
+            Epic epicDTO = taskDeserializer.fromJson(getJsonBody(httpExchange), Epic.class);
+            int epicId = tm.addEpic(epicDTO);
+            sendText(httpExchange, String.format("Эпик создан. id=%s", epicId), 201);
         } catch (IOException e) {
             sendText(httpExchange, e.toString(), 406);
         }
@@ -99,13 +110,27 @@ public class HttpEpicHandler extends BaseHttpHandler {
     private void handleDeleteEpic(HttpExchange httpExchange) throws IOException {
         Optional<Integer> epicIdOpt = getEpicId(httpExchange);
         if (epicIdOpt.isEmpty()) {
-            sendText(httpExchange, "Некорректный идентификатор задачи", 404);
+            sendText(httpExchange, "Некорректный идентификатор эпика", 404);
             return;
         }
         int epicId = epicIdOpt.get();
         try {
-            tm.deleteTaskById(epicId);
+            tm.deleteEpicById(epicId);
             sendText(httpExchange, String.format("Задача удалена. id=%s", epicId), 200);
+        } catch (IOException e) {
+            sendText(httpExchange, e.toString(), 502);
+        }
+    }
+
+    private void handleGetSubTaskFromEpic(HttpExchange httpExchange) throws IOException {
+        Optional<Integer> epicIdOpt = getEpicId(httpExchange);
+        if (epicIdOpt.isEmpty()) {
+            sendText(httpExchange, "Некорректный идентификатор эпика", 404);
+            return;
+        }
+        int epicId = epicIdOpt.get();
+        try {
+            sendText(httpExchange, taskSerializer.toJson(tm.getSubTasksFromEpic(epicId)), 200);
         } catch (IOException e) {
             sendText(httpExchange, e.toString(), 502);
         }
@@ -114,7 +139,7 @@ public class HttpEpicHandler extends BaseHttpHandler {
     private Optional<Integer> getEpicId(HttpExchange exchange) {
         String[] pathParts = exchange.getRequestURI().getPath().split("/");
         try {
-            return Optional.of(Integer.parseInt(pathParts[pathParts.length - 1]));
+            return Optional.of(Integer.parseInt(pathParts[2]));
         } catch (NumberFormatException exception) {
             return Optional.empty();
         }

@@ -1,9 +1,14 @@
 package HttpTaskHandlers;
 
+import Adapters.DurationDeserializer;
+import Adapters.DurationSerializer;
+import Adapters.LocalDateTimeDeserializer;
+import Adapters.LocalDateTimeSerializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import controllers.TaskManager;
+import model.Endpoint;
 import model.Task;
 
 import java.io.IOException;
@@ -12,8 +17,18 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 public class HttpTasksHandler extends BaseHttpHandler {
+    Gson taskDeserializer;
+    Gson taskSerializer;
     public HttpTasksHandler(TaskManager tm) {
         super(tm);
+        taskDeserializer = new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer())
+                .registerTypeAdapter(Duration.class, new DurationDeserializer())
+                .create();
+        taskSerializer = new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer())
+                .registerTypeAdapter(Duration.class, new DurationSerializer())
+                .create();
     }
 
     @Override
@@ -42,13 +57,12 @@ public class HttpTasksHandler extends BaseHttpHandler {
                 break;
             }
             default:
-                sendText(httpExchange, "Такого эндпоинта не существует", 404);
+                sendText(httpExchange, "Такого эндпоинта не существует", 405);
         }
     }
 
     private void handleGetAllTasks(HttpExchange httpExchange) throws IOException {
-        String text = tm.getTasks().toString();
-        sendText(httpExchange, text, 200);
+        sendText(httpExchange,  taskSerializer.toJson(tm.getTasks()), 200);
     }
 
     private void handleGetTaskById(HttpExchange httpExchange) throws IOException {
@@ -59,8 +73,7 @@ public class HttpTasksHandler extends BaseHttpHandler {
         }
         try {
             int taskId = taskIdOpt.get();
-            String text = tm.getTaskById(taskId).toString();
-            sendText(httpExchange, text, 200);
+            sendText(httpExchange, taskSerializer.toJson(tm.getTaskById(taskId)), 200);
         } catch (IOException e) {
             sendText(httpExchange, e.toString(), 404);
         }
@@ -72,27 +85,22 @@ public class HttpTasksHandler extends BaseHttpHandler {
             sendText(httpExchange, "Некорректный идентификатор задачи", 201);
             return;
         }
+        try {
         int taskId = taskIdOpt.get();
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer())
-                .registerTypeAdapter(Duration.class, new DurationAdapter())
-                .create();
-
-        Task taskDTO = gson.fromJson(getJsonBody(httpExchange), Task.class);
+        Task taskDTO = taskDeserializer.fromJson(getJsonBody(httpExchange), Task.class);
         tm.updateTask(taskId, taskDTO);
-        sendText(httpExchange, "Задача обновлена", 200);
+        sendText(httpExchange, "Задача обновлена", 201);}
+        catch (IOException e) {
+            sendText(httpExchange, e.toString(), 406);
+        }
     }
 
     private void handleCreateTask(HttpExchange httpExchange) throws IOException {
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer())
-                .registerTypeAdapter(Duration.class, new DurationAdapter())
-                .create();
         try {
-            Task taskDTO = gson.fromJson(getJsonBody(httpExchange), Task.class);
+            Task taskDTO = taskDeserializer.fromJson(getJsonBody(httpExchange), Task.class);
             int taskId = tm.addTask(taskDTO);
-            sendText(httpExchange, String.format("Задача создана. id=%s", taskId), 200);
-        } catch (IOException e) {
+            sendText(httpExchange, String.format("Задача создана. id=%s", taskId), 201);
+        } catch (Exception e) {
             sendText(httpExchange, e.toString(), 406);
         }
     }

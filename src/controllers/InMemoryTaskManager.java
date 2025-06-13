@@ -167,7 +167,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     protected void cleanEpicEntity(Integer epicId) {
-        if (epics.containsKey(epicId)) {
+        if (epics.containsKey(epicId) && epics.get(epicId).getSubTasksIdList() != null) {
             for (int subTaskId : epics.get(epicId).getSubTasksIdList()) {
                 sortTaskTime.remove(subTasks.get(subTaskId).getStartTime());
                 subTasks.remove(subTaskId);

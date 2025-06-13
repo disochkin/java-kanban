@@ -1,0 +1,7 @@
+package model;
+
+public enum Endpoint {
+    GET_ALL_ENTITY, GET_ENTITY_BY_ID, CREATE_ENTITY, UPDATE_ENTITY, DELETE_ENTITY,
+    GET_ALL_SUBENTITIES, UNKNOWN
+}
+
