@@ -1,4 +1,4 @@
-package HttpTaskHandlers;
+package httptaskhandlers;
 
 import adapters.DurationDeserializer;
 import adapters.DurationSerializer;
@@ -19,6 +19,7 @@ import java.util.Optional;
 public class HttpTasksHandler extends BaseHttpHandler {
     Gson taskDeserializer;
     Gson taskSerializer;
+
     public HttpTasksHandler(TaskManager tm) {
         super(tm);
         taskDeserializer = new GsonBuilder()
@@ -62,7 +63,7 @@ public class HttpTasksHandler extends BaseHttpHandler {
     }
 
     private void handleGetAllTasks(HttpExchange httpExchange) throws IOException {
-        sendText(httpExchange,  taskSerializer.toJson(tm.getTasks()), 200);
+        sendText(httpExchange, taskSerializer.toJson(tm.getTasks()), 200);
     }
 
     private void handleGetTaskById(HttpExchange httpExchange) throws IOException {
@@ -86,11 +87,11 @@ public class HttpTasksHandler extends BaseHttpHandler {
             return;
         }
         try {
-        int taskId = taskIdOpt.get();
-        Task taskDTO = taskDeserializer.fromJson(getJsonBody(httpExchange), Task.class);
-        tm.updateTask(taskId, taskDTO);
-        sendText(httpExchange, "Задача обновлена", 201);}
-        catch (IOException e) {
+            int taskId = taskIdOpt.get();
+            Task taskDTO = taskDeserializer.fromJson(getJsonBody(httpExchange), Task.class);
+            tm.updateTask(taskId, taskDTO);
+            sendText(httpExchange, "Задача обновлена", 201);
+        } catch (IOException e) {
             sendText(httpExchange, e.toString(), 406);
         }
     }

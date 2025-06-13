@@ -1,15 +1,15 @@
 package controllers;
 
-import HttpTaskHandlers.*;
 import com.sun.net.httpserver.HttpServer;
+import httptaskhandlers.*;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
 public class HttpTaskServer {
     private final int PORT = 8080;
-    private HttpServer httpServer;
     private final TaskManager tm;
+    private HttpServer httpServer;
 
     public HttpTaskServer(TaskManager tm) {
         this.tm = tm;

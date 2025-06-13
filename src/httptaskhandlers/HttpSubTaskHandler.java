@@ -1,4 +1,4 @@
-package HttpTaskHandlers;
+package httptaskhandlers;
 
 import adapters.DurationDeserializer;
 import adapters.DurationSerializer;

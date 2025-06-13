@@ -1,13 +1,15 @@
-package HttpTaskHandlers;
+package httptaskhandlers;
+
 import adapters.DurationDeserializer;
 import adapters.DurationSerializer;
 import adapters.LocalDateTimeDeserializer;
 import adapters.LocalDateTimeSerializer;
-import com.google.gson.*;
-import model.Endpoint;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import controllers.TaskManager;
+import model.Endpoint;
 
 import java.io.BufferedReader;
 import java.io.IOException;

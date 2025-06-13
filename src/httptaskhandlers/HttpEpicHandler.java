@@ -1,7 +1,8 @@
-package HttpTaskHandlers;
-import model.Endpoint;
+package httptaskhandlers;
+
 import com.sun.net.httpserver.HttpExchange;
 import controllers.TaskManager;
+import model.Endpoint;
 import model.Epic;
 
 import java.io.IOException;
@@ -63,12 +64,13 @@ public class HttpEpicHandler extends BaseHttpHandler {
             return Endpoint.DELETE_ENTITY;
         }
         if (pathParts.length == 4 && requestMethod.equals("GET")) {
-            return Endpoint.GET_ALL_SUBENTITIES;}
+            return Endpoint.GET_ALL_SUBENTITIES;
+        }
         return Endpoint.UNKNOWN;
     }
 
     private void handleGetAllEpics(HttpExchange httpExchange) throws IOException {
-        sendText(httpExchange,  taskSerializer.toJson(tm.getEpics()), 200);
+        sendText(httpExchange, taskSerializer.toJson(tm.getEpics()), 200);
     }
 
     private void handleGetEpicById(HttpExchange httpExchange) throws IOException {
@@ -79,7 +81,7 @@ public class HttpEpicHandler extends BaseHttpHandler {
         }
         try {
             int epicId = epicIdOpt.get();
-            sendText(httpExchange,  taskSerializer.toJson(tm.getEpicById(epicId)), 200);
+            sendText(httpExchange, taskSerializer.toJson(tm.getEpicById(epicId)), 200);
         } catch (IOException e) {
             sendText(httpExchange, e.toString(), 404);
         }
