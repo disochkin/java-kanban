@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 
 public class HttpTaskServer {
-    private final int PORT = 8080;
+    private final int port = 8080;
     private final TaskManager tm;
     private HttpServer httpServer;
 
@@ -22,7 +22,7 @@ public class HttpTaskServer {
 
     public void start() throws IOException {
         httpServer = HttpServer.create();
-        httpServer.bind(new InetSocketAddress(PORT), 0);
+        httpServer.bind(new InetSocketAddress(port), 0);
         httpServer.createContext("/tasks", new HttpTasksHandler(tm));
         httpServer.createContext("/epics", new HttpEpicHandler(tm));
         httpServer.createContext("/subtasks", new HttpSubTaskHandler(tm));
@@ -30,11 +30,11 @@ public class HttpTaskServer {
         httpServer.createContext("/prioritized", new HttpPrioritizedTaskHandler(tm));
 
         httpServer.start();
-        System.out.println("Server STARTED on port: " + PORT);
+        System.out.println("Server STARTED on port: " + port);
     }
 
     public void stop() {
         httpServer.stop(1);
-        System.out.println("Server STOPPED on port: " + PORT);
+        System.out.println("Server STOPPED on port: " + port);
     }
 }
