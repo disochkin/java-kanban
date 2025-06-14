@@ -85,7 +85,7 @@ public class HttpHistoryTest {
         response = client.send(request, HttpResponse.BodyHandlers.ofString());
         int id2 = extractId(response.body());
 
-        // запрашиваем задачи
+        // создаем задачи
         client = HttpClient.newHttpClient();
         url = URI.create(String.format("http://localhost:8080/tasks/%s", id1));
         request = HttpRequest.newBuilder().uri(url).POST(HttpRequest.BodyPublishers.ofString(taskJson2)).build();
@@ -96,14 +96,46 @@ public class HttpHistoryTest {
         request = HttpRequest.newBuilder().uri(url).POST(HttpRequest.BodyPublishers.ofString(taskJson2)).build();
         response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        // запрашиваем историю просмотров
+        // запрашиваем историю просмотров.
+        // история пустая тк просмотров не было
         client = HttpClient.newHttpClient();
         url = URI.create("http://localhost:8080/history");
         request = HttpRequest.newBuilder().uri(url).GET().build();
         response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals("[]", response.body());
 
+        // запрашиваем задачи
+        client = HttpClient.newHttpClient();
+        url = URI.create(String.format("http://localhost:8080/tasks/%s", id1));
+        request = HttpRequest.newBuilder().uri(url).GET().build();
+        response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        assertEquals(200, response.statusCode());
+
+        client = HttpClient.newHttpClient();
+        url = URI.create(String.format("http://localhost:8080/tasks/%s", id2));
+        request = HttpRequest.newBuilder().uri(url).GET().build();
+        response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        assertEquals(200, response.statusCode());
+
+        // запрашиваем историю просмотров.
+        client = HttpClient.newHttpClient();
+        url = URI.create("http://localhost:8080/history");
+        request = HttpRequest.newBuilder().uri(url).GET().build();
+        response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        assertEquals("[\"1,TASK,Test 1,NEW,Testing task 1,5,2020-01-01T00:00\",\"2,TASK,Test 2,NEW,Testing task 2,5,2020-01-01T00:10\"]", response.body());
+
+        //удаляем задачу 2
+        client = HttpClient.newHttpClient();
+        url = URI.create(String.format("http://localhost:8080/tasks/%s", id2));
+        request = HttpRequest.newBuilder().uri(url).DELETE().build();
+        response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        assertEquals(String.format("Задача удалена. id=%s", id2), response.body());
+
+        // снова запрашиваем историю просмотров.
+        client = HttpClient.newHttpClient();
+        url = URI.create("http://localhost:8080/history");
+        request = HttpRequest.newBuilder().uri(url).GET().build();
+        response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        assertEquals("[\"1,TASK,Test 1,NEW,Testing task 1,5,2020-01-01T00:00\"]", response.body());
     }
-
-
 }
