@@ -98,15 +98,24 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Epic getEpicById(int epicId) {
-        historyManager.add(epics.get(epicId));
-        return epics.get(epicId);
+    public Epic getEpicById(Integer epicId) throws IOException {
+        if (epics.containsKey(epicId)) {
+            historyManager.add(epics.get(epicId));
+            return epics.get(epicId);
+        } else {
+            throw new IOException(String.format("Эпик с id=%s не найден", epicId));
+        }
     }
 
+
     @Override
-    public Task getTaskById(int taskId) {
-        historyManager.add(tasks.get(taskId));
-        return tasks.get(taskId);
+    public Task getTaskById(Integer taskId) throws IOException {
+        if (tasks.containsKey(taskId)) {
+            historyManager.add(tasks.get(taskId));
+            return tasks.get(taskId);
+        } else {
+            throw new IOException(String.format("Задача с id=%s не найдена", taskId));
+        }
     }
 
     @Override
@@ -158,7 +167,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     protected void cleanEpicEntity(Integer epicId) {
-        if (epics.containsKey(epicId)) {
+        if (epics.containsKey(epicId) && epics.get(epicId).getSubTasksIdList() != null) {
             for (int subTaskId : epics.get(epicId).getSubTasksIdList()) {
                 sortTaskTime.remove(subTasks.get(subTaskId).getStartTime());
                 subTasks.remove(subTaskId);

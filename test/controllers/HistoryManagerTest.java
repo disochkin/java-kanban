@@ -42,7 +42,7 @@ class HistoryManagerTest {
 
     @Test
     @DisplayName("Добавить в историю")
-    void getHistoryTest() {
+    void getHistoryTest() throws IOException {
         taskManagerTest.getTaskById(taskId);
         requestedTask.add(task.toString());
         assertEquals(requestedTask, taskManagerTest.getHistory(), "История просмотра задач работает некорректно." +
@@ -64,7 +64,7 @@ class HistoryManagerTest {
     }
 
     @Test
-    void historyCountTestTask() {
+    void historyCountTestTask() throws IOException {
         taskManagerTest.getTaskById(taskId);
         requestedTask.add(task.toString());
         taskManagerTest.getTaskById(taskId);
@@ -73,7 +73,7 @@ class HistoryManagerTest {
     }
 
     @Test
-    void historyCountTestEpic() {
+    void historyCountTestEpic() throws IOException {
         taskManagerTest.getEpicById(epicId);
         requestedTask.add(epic1.toString());
         taskManagerTest.getEpicById(epicId);
@@ -92,7 +92,7 @@ class HistoryManagerTest {
     }
 
     @Test
-    void historyManagerRemoveTaskInMiddle() {
+    void historyManagerRemoveTaskInMiddle() throws IOException {
         taskManagerTest.getTaskById(taskId);
         requestedTask.add(task.toString());
 
@@ -109,7 +109,7 @@ class HistoryManagerTest {
     }
 
     @Test
-    void historyManagerRemoveTaskFromStart() {
+    void historyManagerRemoveTaskFromStart() throws IOException {
         taskManagerTest.getTaskById(taskId);
 
         taskManagerTest.getSubTaskById(subTaskId1);
@@ -126,7 +126,7 @@ class HistoryManagerTest {
     }
 
     @Test
-    void historyManagerRemoveTaskFromEnd() {
+    void historyManagerRemoveTaskFromEnd() throws IOException {
         taskManagerTest.getTaskById(taskId);
         requestedTask.add(task.toString());
 
@@ -143,7 +143,7 @@ class HistoryManagerTest {
     }
 
     @Test
-    void historyManagerUpdateAfterDeleteTask() {
+    void historyManagerUpdateAfterDeleteTask() throws IOException {
         taskManagerTest.getTaskById(taskId);
         taskManagerTest.deleteTaskById(taskId);
 
@@ -152,9 +152,9 @@ class HistoryManagerTest {
     }
 
     @Test
-    void historyManagerUpdateAfterDeleteEpic() {
-        taskManagerTest.getEpicById(taskId);
-        taskManagerTest.deleteEpicById(taskId);
+    void historyManagerUpdateAfterDeleteEpic() throws IOException {
+        taskManagerTest.getEpicById(epicId);
+        taskManagerTest.deleteEpicById(epicId);
 
         assertEquals(requestedTask, taskManagerTest.getHistory(), "История просмотра задач работает некорректно." +
                 "Эпик не удаляется из истории просмотра после удаления");
