@@ -16,9 +16,9 @@ public interface TaskManager {
 
     int addEpic(Epic newEpic);
 
-    Epic getEpicById(int epicId);
+    Epic getEpicById(Integer epicId) throws IOException;
 
-    Task getTaskById(int taskId);
+    Task getTaskById(Integer taskId) throws IOException;
 
     SubTask getSubTaskById(int subTaskId);
 
